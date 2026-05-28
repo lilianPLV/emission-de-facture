@@ -1,6 +1,7 @@
 {
   "name": "emission-de-facture",
   "type": "module",
+  "start": "node back/serveur.js",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",

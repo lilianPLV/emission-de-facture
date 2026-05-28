@@ -11,8 +11,15 @@ router.post("/login", async (req, res) => {
   }
 
   try {
-    const hashBDD = '$2a$12$fyZb707d.oVYf0OgqaRmvuBGas.adrrh0nOGxqCeKLacb0whEEU0W'
-    const result = await bcrypt.compare(password, hashBDD);
+    const [rows] = await pool.query(`SELECT MDP FROM identification WHERE identifiant = ?`,
+      [email]
+    );
+
+    if (rows.length === 0) {
+      return res.status(401).json({ error: "Utilisateur introuvable." });
+    }
+
+    const result = await bcrypt.compare(password, rows[0].MDP);
 
     if (!result) {
       return res.status(401).json({ error: "Mot de passe incorrect." });
