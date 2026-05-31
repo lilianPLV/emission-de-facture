@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Émission de facture</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+  <div class="card">
+    <h1>Déposer une facture</h1>
+    <p class="subtitle">Envoyez votre facture PDF directement sur Chorus Pro</p>
+
+    <div class="upload-zone" id="uploadZone">
+      <p><span>Cliquez pour choisir</span> ou glissez votre PDF ici</p>
+      <input type="file" id="inputFichier" accept=".pdf" />
+    </div>
+
+    <div class="fichier-info" id="fichierInfo">
+      <span class="fichier-nom" id="fichierNom"></span>
+    </div>
+
+    <button class="btn" id="btnEnvoyer" disabled>Envoyer à Chorus Pro</button>
+
+    <div class="message" id="message"></div>
+  </div>
+
+  <script type="module" src="dashboard.js"></script>
+</body>
+</html>
