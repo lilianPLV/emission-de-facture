@@ -20,20 +20,14 @@ console.log("Token obtenu :", tokenData.access_token ? "OK" : "ÉCHEC");
 const credentials = `${process.env.CHORUS_TECH_LOGIN}:${process.env.CHORUS_TECH_PASSWORD}`;
 const cproAccount = Buffer.from(credentials).toString("base64");
 
-const res = await fetch(`${process.env.CHORUS_API_URL}/factures/v1/consulter/listeFournisseur`, {
-    method: "POST",
-    headers: {
-        "Authorization": `Bearer ${tokenData.access_token}`,
-        "cpro-account": cproAccount,
-        "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-        parametresRecherche: {
-            nbResultatsParPage: 10,
-            pageResultatDemandee: 1,
-            statut: "A TRAITER"
-        },
-    }),
+const res = await fetch(`${process.env.CHORUS_API_URL}/utilisateurs/v1/monCompte/recuperer/rattachements`, {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${tokenData.access_token}`,
+    "cpro-account": cproAccount,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({}),
 });
 
 const data = await res.json();
