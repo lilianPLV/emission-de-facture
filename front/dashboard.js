@@ -87,7 +87,7 @@ setupUpload('input-rib', 'rib', 'status-rib', 'item-rib');
 setupUpload('input-bc', 'bc', 'status-bc', 'item-bc');
 
 function verifierEtape1() {
-  const ok = state.fichiers.facture && state.fichiers.rib && state.fichiers.bc;
+  const ok = !!state.fichiers.facture && !!state.fichiers.rib && !!state.fichiers.bc;
   document.getElementById('btn-etape1').disabled = !ok;
 }
 
