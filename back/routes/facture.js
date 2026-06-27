@@ -4,6 +4,7 @@ const require = createRequire(import.meta.url)
 const pdfParse = require("pdf-parse")
 import { uploadFichier } from "../services/ChorusFichier.js"
 import { soumettreFacture } from "../services/ChorusFacture.js"
+import { genererFacturePDF } from "../services/pdfFacture.js"
 const router = express.Router();
 
 function extraireChamps(texte) {
@@ -64,6 +65,27 @@ router.post("/upload", async (req, res) => {
     }
 
     res.json({ succes: true, pieceJointeId, champs });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.post("/pdf", async (req, res) => {
+  const { numeroFacture, dateFacture, lignesPoste } = req.body;
+
+  const champsManquants = [];
+  if (!numeroFacture) champsManquants.push("numeroFacture");
+  if (!dateFacture) champsManquants.push("dateFacture");
+  if (!lignesPoste || lignesPoste.length === 0) champsManquants.push("lignesPoste");
+  if (champsManquants.length > 0) {
+    return res.status(400).json({ error: `Champs manquants : ${champsManquants.join(", ")}` });
+  }
+
+  try {
+    const pdfBuffer = await genererFacturePDF({ numeroFacture, dateFacture, lignesPoste });
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `inline; filename="facture-${numeroFacture}.pdf"`);
+    res.send(pdfBuffer);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
