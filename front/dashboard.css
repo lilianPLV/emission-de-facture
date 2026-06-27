@@ -51,6 +51,19 @@ header {
 
 .logo-sub { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
 
+.btn-creer-facture {
+  background: #fff;
+  color: var(--bleu, #2563eb);
+  border: 1.5px solid var(--bleu, #2563eb);
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+.btn-creer-facture:hover {
+  background: var(--bleu, #2563eb);
+  color: #fff;
+}
+
 .btn-nouvelle {
   background: var(--bleu);
   border: none;
