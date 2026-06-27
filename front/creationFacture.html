@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Créer une facture</title>
+<link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="creationfacture.css">
+</head>
+<body>
+
+  <div class="conteneur">
+    <h1>Créer une nouvelle facture</h1>
+
+    <form id="form-facture">
+
+      <section class="bloc">
+        <div class="champ">
+          <label for="dateFacture">Date de la facture</label>
+          <input type="text" id="dateFacture" required>
+        </div>
+        <div class="champ">
+          <label for="ligneDescription">Description (ex: Séance de psychopédagogie pour Jean Dupont le 15/07/2026)</label>
+          <input type="text" id="ligneDescription" required>
+        </div>
+        <div class="champ">
+          <label for="lignePrixUnitaire">Prix (€)</label>
+          <input type="number" id="lignePrixUnitaire" step="0.01" min="0" required>
+        </div>
+      </section>
+
+      <div class="message" id="message"></div>
+
+      <div class="nav-buttons">
+        <a href="dashboard.html" class="btn-retour">← Retour au dashboard</a>
+        <button type="submit" class="btn-envoyer" id="btn-creer">Créer la facture</button>
+      </div>
+
+    </form>
+  </div>
+
+  <script src="creationfacture.js"></script>
+</body>
+</html>

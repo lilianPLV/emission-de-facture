@@ -1,0 +1,94 @@
+.conteneur {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.conteneur h1 {
+  font-size: 26px;
+  margin-bottom: 30px;
+  color: #1a1a1a;
+}
+
+.bloc {
+  background: #fff;
+  border: 1px solid var(--border, #e5e5e5);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.bloc h2 {
+  font-size: 17px;
+  margin: 0 0 18px 0;
+  color: #1a1a1a;
+}
+
+.champ {
+  margin-bottom: 16px;
+}
+
+.champ label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.champ input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.champ input:focus {
+  outline: none;
+  border-color: var(--bleu, #2563eb);
+}
+
+.champ-inline {
+  display: flex;
+  gap: 16px;
+}
+
+.champ-inline > div {
+  flex: 1;
+}
+
+.message {
+  display: none;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.message.succes {
+  display: block;
+  background: #e6f4ea;
+  color: #1e7e34;
+}
+
+.message.erreur {
+  display: block;
+  background: #fbe7e7;
+  color: #c0392b;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-buttons .btn-retour {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}

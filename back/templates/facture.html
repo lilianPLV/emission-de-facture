@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 50px 60px;
+    color: #2b2b2b;
+    font-size: 13px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 50px;
+  }
+
+  .titre h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+    color: #2b2b2b;
+  }
+
+  .titre p {
+    margin: 0;
+    color: #555;
+    font-size: 14px;
+  }
+
+  .logo img {
+    width: 110px;
+    height: auto;
+  }
+
+  .colonnes {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+  }
+
+  .colonne {
+    width: 48%;
+  }
+
+  .colonne h2 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+    color: #2b2b2b;
+  }
+
+  .ligne-info {
+    display: flex;
+    margin-bottom: 6px;
+    font-size: 12.5px;
+  }
+
+  .ligne-info .label {
+    width: 130px;
+    color: #777;
+    flex-shrink: 0;
+  }
+
+  .ligne-info .valeur {
+    color: #2b2b2b;
+  }
+
+  .ligne-info .valeur strong {
+    font-weight: 600;
+  }
+
+  .prestation-titre {
+    font-size: 12px;
+    color: #555;
+    letter-spacing: 0.3px;
+    margin-bottom: 30px;
+  }
+
+  .section-detail h2 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+    color: #2b2b2b;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 4px;
+  }
+
+  thead tr {
+    background: #3a3a3a;
+    color: #fff;
+  }
+
+  thead th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 10px 12px;
+  }
+
+  thead th.right, tbody td.right {
+    text-align: right;
+  }
+
+  tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #e8e8e8;
+    font-size: 12.5px;
+  }
+
+  .mention-tva {
+    text-align: right;
+    color: #777;
+    font-size: 11.5px;
+    margin-top: 10px;
+  }
+
+  .total-final {
+    text-align: right;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+
+  .total-final span:first-child {
+    margin-right: 24px;
+    font-weight: 400;
+  }
+
+  .section-conditions {
+    margin-top: 50px;
+  }
+
+  .section-conditions h2 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 14px 0;
+    color: #2b2b2b;
+  }
+
+  .section-conditions p {
+    margin: 4px 0;
+    font-size: 12.5px;
+  }
+
+  .section-conditions strong {
+    font-weight: 600;
+  }
+
+  .footer {
+    margin-top: 80px;
+    padding-top: 14px;
+    border-top: 1px solid #e8e8e8;
+    display: flex;
+    justify-content: space-between;
+    color: #999;
+    font-size: 10.5px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="titre">
+      <h1>Facture {{numeroFacture}}</h1>
+      <p>{{dateFacture}}</p>
+    </div>
+    <div class="logo">
+      <img src="http://localhost:4000/logo-ouvrirsesailes.png" alt="Logo">
+    </div>
+  </div>
+
+  <div class="colonnes">
+    <div class="colonne">
+      <h2>Émetteur</h2>
+      <div class="ligne-info"><span class="label">Société :</span><span class="valeur"><strong>{{emetteurSociete}}</strong></span></div>
+      <div class="ligne-info"><span class="label">Votre contact :</span><span class="valeur">{{emetteurContact}}</span></div>
+      <div class="ligne-info"><span class="label">Adresse :</span><span class="valeur">{{emetteurAdresse}}</span></div>
+      <div class="ligne-info"><span class="label">Pays :</span><span class="valeur">{{emetteurPays}}</span></div>
+      <div class="ligne-info"><span class="label">Numéro d'entreprise :</span><span class="valeur">{{emetteurSiret}}</span></div>
+      <div class="ligne-info"><span class="label">Numéro de téléphone :</span><span class="valeur">{{emetteurTelephone}}</span></div>
+      <div class="ligne-info"><span class="label">Adresse email :</span><span class="valeur">{{emetteurEmail}}</span></div>
+      <div class="ligne-info"><span class="label">Site internet :</span><span class="valeur">{{emetteurSite}}</span></div>
+    </div>
+    <div class="colonne">
+      <h2>Destinataire</h2>
+      <div class="ligne-info"><span class="label">Nom :</span><span class="valeur"><strong>{{destinataireNom}}</strong></span></div>
+    </div>
+  </div>
+
+  <div class="prestation-titre">{{titrePrestation}}</div>
+
+  <div class="section-detail">
+    <h2>Détail</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+          <th class="right">Prix unitaire</th>
+          <th class="right">Quantité</th>
+          <th class="right">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{lignesFacture}}
+      </tbody>
+    </table>
+    <div class="mention-tva">{{mentionTva}}</div>
+    <div class="total-final"><span>Total</span><span>{{montantTotal}} €</span></div>
+  </div>
+
+  <div class="section-conditions">
+    <h2>Conditions</h2>
+    <p><strong>Conditions de règlement :</strong> {{conditionsReglement}}</p>
+    <p><strong>Mode de règlement :</strong> {{modeReglement}}</p>
+    <p><strong>Intérêts de retard :</strong> {{interetsRetard}}</p>
+  </div>
+
+  <div class="footer">
+    <span>Facture {{numeroFacture}}</span>
+    <span>Page 1 sur 1</span>
+  </div>
+
+</body>
+</html>
