@@ -6,7 +6,6 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
 
-// Une seule instance de Chromium réutilisée pour toutes les générations
 let browserInstance = null;
 
 async function getBrowser() {
@@ -52,15 +51,7 @@ function calculerTotal(lignesPoste) {
   return lignesPoste.reduce((acc, l) => acc + l.quantite * l.prixUnitaire, 0);
 }
 
-/**
- * Génère le PDF d'une facture à partir des données complètes :
- * numeroFacture, dateFacture, emetteur {societe, contact, adresse, pays,
- * siret, telephone, email, site}, destinataireNom, titrePrestation,
- * conditionsReglement, modeReglement, interetsRetard, mentionTva, lignesPoste.
- *
- * @param {Object} facture
- * @returns {Promise<Buffer>}
- */
+//Genere le pfd
 export async function genererFacturePDF(facture) {
   const templatePath = path.join(__dirname, "..", "templates", "facture.html");
   let html = await fs.readFile(templatePath, "utf-8");
@@ -109,7 +100,7 @@ export async function genererFacturePDF(facture) {
   }
 }
 
-// À appeler quand le serveur s'arrête, pour libérer Chromium proprement
+//A executer a la fermeture
 export async function fermerBrowserPdf() {
   if (browserInstance) {
     await browserInstance.close();

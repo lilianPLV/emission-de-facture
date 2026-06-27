@@ -5,8 +5,7 @@ import { genererFacturePDF } from "../services/pdfFacture.js";
 
 const router = express.Router();
 
-// Valeurs fixes de l'émetteur, du destinataire et des conditions —
-// identiques sur toutes les factures
+//information de base qui ne change jamais
 const EMETTEUR = {
   societe: "ouvrirsesailes EI",
   contact: "Marie PULVERIN - Praticienne en psychopédagogie positive",
@@ -24,11 +23,7 @@ const MODE_REGLEMENT = "Virement bancaire";
 const INTERETS_RETARD = "2% par mois";
 const MENTION_TVA = "TVA non applicable, art. 293 B du CGI";
 
-/**
- * POST /api/creation-facture
- * Crée une nouvelle facture à partir de seulement 3 champs saisis :
- * dateFacture, description, prixUnitaire. Le reste est fixe.
- */
+//création de la facture
 router.post("/", async (req, res) => {
   const { dateFacture, description, prixUnitaire } = req.body;
 
@@ -52,10 +47,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-/**
- * GET /api/creation-facture
- * Liste l'historique des factures créées.
- */
+//récuperation de l'historique des factures créers
 router.get("/", async (req, res) => {
   try {
     const [rows] = await pool.query(
