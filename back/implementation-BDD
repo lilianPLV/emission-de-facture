@@ -1,0 +1,91 @@
+import "dotenv/config";
+import mysql from "mysql2/promise";
+import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = path.dirname(__filename);
+
+const CHEMIN_SQL = path.join(__dirname, "..", "BDD", "projet.sql");
+
+function decouperRequetes(contenuSql) {
+  const sansCommentaires = contenuSql
+    .split("\n")
+    .filter((ligne) => !ligne.trim().startsWith("--"))
+    .join("\n");
+
+  return sansCommentaires
+    .split(";")
+    .map((requete) => requete.trim())
+    .filter((requete) => requete.length > 0);
+}
+
+function rendreIdempotent(requete) {
+  return requete.replace(/^CREATE TABLE\s+/i, "CREATE TABLE IF NOT EXISTS ");
+}
+
+async function initialiserBaseDeDonnees() {
+  console.log(`Lecture du fichier ${CHEMIN_SQL}`);
+  const contenuSql = await fs.readFile(CHEMIN_SQL, "utf-8");
+  const requetes = decouperRequetes(contenuSql);
+
+  console.log("Connexion à la base de données");
+  const connection = await mysql.createConnection({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    multipleStatements: false,
+  });
+  console.log(`Connecté à la base "${process.env.DB_NAME}".\n`);
+
+  for (let requete of requetes) {
+    if (/^(START TRANSACTION|COMMIT|SET )/i.test(requete)) continue;
+
+    if (/^CREATE TABLE/i.test(requete)) {
+      requete = rendreIdempotent(requete);
+    }
+
+    if (/^INSERT INTO `identification`/i.test(requete)) {
+      const identifiantMatch = requete.match(/\(\s*'([^']+)'\s*,/);
+      const identifiant = identifiantMatch ? identifiantMatch[1] : null;
+
+      if (identifiant) {
+        const [lignesExistantes] = await connection.query(
+          "SELECT 1 FROM `identification` WHERE `identifiant` = ?",
+          [identifiant]
+        );
+        if (lignesExistantes.length > 0) {
+          console.log(` Ignoré (déjà existant) : ligne identification pour ${identifiant}`);
+          continue;
+        }
+      }
+    }
+
+    try {
+      await connection.query(requete);
+      const premiereLigne = requete.split("\n")[0].slice(0, 60);
+      console.log(`Exécuté: ${premiereLigne}...`);
+    } catch (err) {
+      const codesIgnorables = [
+        "ER_DUP_ENTRY", "ER_DUP_KEYNAME", "ER_DUP_FIELDNAME", "ER_MULTIPLE_PRI_KEY",
+      ];
+      if (codesIgnorables.includes(err.code)) {
+        console.log(`Ignoré (déjà existant) : ${err.sqlMessage}`);
+      } else {
+        console.error(`Erreur sur une requête : ${err.message}`);
+        console.error(`Requête concernée : ${requete.slice(0, 150)}...`);
+      }
+    }
+  }
+
+  console.log("\nInitialisation terminée.");
+  await connection.end();
+}
+
+initialiserBaseDeDonnees().catch((err) => {
+  console.error("Erreur lors de l'initialisation de la base :", err.message);
+  process.exit(1);
+});

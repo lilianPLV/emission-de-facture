@@ -49,7 +49,7 @@ export async function soumettreFacture({
     },
     "destinataire": {
       "codeDestinataire": siretDestinataire,
-      "codeServiceExecutant": codeService,
+      // "codeServiceExecutant": codeService,
     },
     "fournisseur": {
       "codeCoordonneesBancairesFournisseur": parseInt(process.env.CHORUS_CODE_RIB,),
