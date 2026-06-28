@@ -127,7 +127,7 @@
       <table>
         <thead>
           <tr>
-            <th>Numéro</th><th>Date</th><th>SIRET destinataire</th><th>Montant TTC</th><th>Statut</th>
+            <th>Numéro</th><th>Date</th><th>PATIENT</th><th>Montant TTC</th><th>Statut</th>
           </tr>
         </thead>
         <tbody id="tbody-dashboard"></tbody>
@@ -254,6 +254,14 @@
           <div class="field span2">
             <label>SIRET destinataire <span class="requis-star">*</span></label>
             <input type="text" id="siretDestinataire" placeholder="14 chiffres" maxlength="14">
+          </div>
+          <div class="field">
+            <label>Nom du patient <span class="requis-star">*</span></label>
+            <input type="text" id="nomPatient" placeholder="ex: Dupont">
+          </div>
+          <div class="field">
+            <label>Prénom du patient <span class="requis-star">*</span></label>
+            <input type="text" id="prenomPatient" placeholder="ex: Jean">
           </div>
           <div class="field">
             <label>Code service</label>

@@ -1,4 +1,5 @@
 import express from "express"
+import pool from "../db.js"
 import { createRequire } from "module"
 const require = createRequire(import.meta.url)
 const pdfParse = require("pdf-parse")
@@ -94,6 +95,7 @@ router.post("/pdf", async (req, res) => {
 router.post("/soumettre", async (req, res) => {
   const {
     numeroFacture, dateFacture, siretDestinataire,
+    nomPatient, prenomPatient,
     codeService, libelleService, typeTva,
     lignesPoste, montantHT, montantTVA, montantTTC,
     idFichierFacture, nomFichierFacture,
@@ -120,10 +122,29 @@ router.post("/soumettre", async (req, res) => {
       idFichierRIB, nomFichierRIB,
       idFichierBonCommande, nomFichierBonCommande,
     });
+    try {
+      await pool.query(
+        `INSERT INTO historique_factures (numero, date_facture, nom_patient, prenom_patient, montant, statut) VALUES (?, ?, ?, ?, ?, ?)`,
+        [numeroFacture, dateFacture, nomPatient, prenomPatient, montantTTC, "envoye"]
+      );
+    } catch (errHistorique) {
+      console.error("Échec insertion historique mais facture bien envoyée à Chorus Pro:", errHistorique.message);
+    }
     res.json({ succes: true, resultat });
-  } 
+  }
   catch (err) {
     res.status(500).json({ error: err.message })
+  }
+});
+
+router.get("/historique", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT id, numero, date_facture AS date, nom_patient AS nom, prenom_patient AS prenom, montant, statut FROM historique_factures ORDER BY id DESC"
+    );
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 export default router;

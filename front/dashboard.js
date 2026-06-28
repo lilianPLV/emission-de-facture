@@ -2,7 +2,7 @@ const state = {
   fichiers: { facture: null, rib: null, bc: null },
   ids: { facture: null, rib: null, bc: null },
   etape: 1,
-  historique: JSON.parse(localStorage.getItem('chorus-historique') || '[]'),
+  historique: [],
 };
 
 const heroContenu = {
@@ -307,10 +307,12 @@ async function envoyerFacture() {
     tva += m * (l.tauxTva / 100);
   }
 
-  const payload = {
+   const payload = {
     numeroFacture: document.getElementById('numeroFacture').value,
     dateFacture: document.getElementById('dateFacture').value,
     siretDestinataire: document.getElementById('siretDestinataire').value,
+    nomPatient: document.getElementById('nomPatient').value,
+    prenomPatient: document.getElementById('prenomPatient').value,
     codeService: document.getElementById('codeService').value || null,
     libelleService: document.getElementById('libelleService').value || null,
     typeTva: document.getElementById('typeTva').value,
@@ -337,18 +339,7 @@ async function envoyerFacture() {
     const data = await res.json();
 
     if (data.succes) {
-      const entree = {
-        numero: payload.numeroFacture,
-        date: payload.dateFacture,
-        siret: payload.siretDestinataire,
-        montant: (ht + tva).toFixed(2),
-        statut: 'envoye',
-      };
-      state.historique.unshift(entree);
-      localStorage.setItem('chorus-historique', JSON.stringify(state.historique));
-      majHistorique();
-      majDashboard();
-      majStats();
+      await chargerHistorique();
 
       msg.className = 'message succes';
       msg.innerHTML = `
@@ -374,6 +365,23 @@ async function envoyerFacture() {
   btn.textContent = 'Envoyer à Chorus Pro';
 }
 
+function formatDateFr(dateValeur) {
+  return String(dateValeur).slice(0, 10);
+}
+
+async function chargerHistorique() {
+  try {
+    const res = await fetch('/api/facture/historique');
+    state.historique = await res.json();
+  } catch (err) {
+    console.error('Erreur chargement historique :', err.message);
+    state.historique = [];
+  }
+  majHistorique();
+  majDashboard();
+  majStats();
+}
+
 function majHistorique() {
   const tbody = document.getElementById('tbody-historique');
   const empty = document.getElementById('empty-historique');
@@ -388,8 +396,8 @@ function majHistorique() {
   tbody.innerHTML = state.historique.map(f => `
     <tr>
       <td><strong>${f.numero}</strong></td>
-      <td>${f.date}</td>
-      <td>${f.siret}</td>
+      <td>${formatDateFr(f.date)}</td>
+      <td>${f.prenom} ${f.nom}</td>
       <td><strong>${f.montant} €</strong></td>
       <td><span class="badge-statut ${f.statut}">${f.statut === 'envoye' ? '✓ Envoyé' : f.statut}</span></td>
     </tr>
@@ -409,8 +417,8 @@ function majDashboard() {
   tbody.innerHTML = state.historique.slice(0, 5).map(f => `
     <tr>
       <td><strong>${f.numero}</strong></td>
-      <td>${f.date}</td>
-      <td>${f.siret}</td>
+      <td>${formatDateFr(f.date)}</td>
+      <td>${f.prenom} ${f.nom}</td>
       <td><strong>${f.montant} €</strong></td>
       <td><span class="badge-statut ${f.statut}">${f.statut === "envoye" ? "✓ Envoyé" : f.statut}</span></td>
     </tr>
@@ -435,7 +443,5 @@ function lireEnBase64(fichier) {
   });
 }
 
-majDashboard();
-majHistorique();
-majStats();
+chargerHistorique();
 afficherVue('dashboard');

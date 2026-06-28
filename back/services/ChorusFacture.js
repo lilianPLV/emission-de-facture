@@ -15,7 +15,7 @@ function construirePiecesJointes(idRIB, nomRIB, idBonCommande, nomFichierBonComm
       pieceJointeComplementaireId: idBonCommande,
       pieceJointeComplementaireDesignation: nomFichierBonCommande,
       pieceJointeComplementaireType:
-        process.env.NODE_ENV === "production" ? "BON_DE_COMMANDE" : "RIB",
+        process.env.NODE_ENV === "production" ? "BC" : "RIB",
     });
   return pieces;
 }
@@ -49,11 +49,10 @@ export async function soumettreFacture({
     },
     "destinataire": {
       "codeDestinataire": siretDestinataire,
+      "codeServiceExecutant": codeService,
     },
     "fournisseur": {
-      "codeCoordonneesBancairesFournisseur": parseInt(
-        process.env.CHORUS_CODE_RIB,
-      ),
+      "codeCoordonneesBancairesFournisseur": parseInt(process.env.CHORUS_CODE_RIB,),
       "idFournisseur": parseInt(process.env.CHORUS_ID_STRUCTURE),
     },
     "idUtilisateurCourant": parseInt(process.env.CHORUS_ID_RATTACHEMENT),
